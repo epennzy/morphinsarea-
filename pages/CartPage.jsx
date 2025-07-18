@@ -1,59 +1,12 @@
-import { useCart } from "@/context/CartContext";
-import { supabase } from "@/lib/supabaseClient";
+// /pages/cart.jsx import { useContext } from "react"; import { CartContext } from "@/context/CartContext"; import { createClient } from "@/lib/supabaseClient";
 
-export default function CartPage() {
-  const { cart, removeFromCart, clearCart } = useCart();
+const supabase = createClient();
 
-  const handleCheckout = async () => {
-    const total = cart.length;
-    const { error } = await supabase.from("orders").insert([
-      {
-        items: cart,
-        total: total,
-      },
-    ]);
-    if (!error) {
-      alert("Order berhasil dikirim!");
-      clearCart();
-    } else {
-      alert("Gagal kirim order");
-    }
-  };
+export default function CartPage() { const { cartItems, total, removeFromCart, clearCart } = useContext(CartContext);
 
-  return (
-    <div className="p-4 text-white bg-[#1E1E1E] min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+const handleCheckout = async () => { const { error } = await supabase.from("orders").insert([ { items: cartItems, total, }, ]); if (!error) { alert("Order Berhasil Dibuat!"); clearCart(); } else { alert("Gagal Membuat Order!"); } };
 
-      {cart.length === 0 ? (
-        <p>Cart kamu kosong</p>
-      ) : (
-        <div className="space-y-2">
-          {cart.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-[#2A2A2A] p-3 rounded flex justify-between items-center"
-            >
-              <div>
-                <h2 className="font-semibold">{item.name}</h2>
-                <p className="text-purple-400">{item.price}</p>
-              </div>
-              <button
-                onClick={() => removeFromCart(item.name)}
-                className="bg-red-500 text-white px-2 py-1 rounded"
-              >
-                Hapus
-              </button>
-            </div>
-          ))}
-
-          <button
-            onClick={handleCheckout}
-            className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded"
-          >
-            Checkout Sekarang
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
+return ( <div className="min-h-screen bg-[#1E1E1E] p-4 text-white"> <h1 className="text-2xl font-bold mb-4 text-center">Keranjang Saya</h1> {cartItems.length === 0 ? ( <p className="text-center">Keranjang kosong.</p> ) : ( <div> {cartItems.map((item, index) => ( <div key={index} className="bg-[#2D2D2D] p-4 rounded-xl mb-3"> <h2 className="text-lg font-semibold">{item.name}</h2> <p className="text-purple-400">{item.price}</p> <button onClick={() => removeFromCart(item)} className="mt-2 bg-red-500 px-2 py-1 rounded" > Hapus </button> </div> ))} <div className="text-center mt-4"> <p className="mb-2">Total: <span className="text-purple-400">Rp{total}</span></p> <button
+onClick={handleCheckout}
+className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700"
+> Checkout </button> </div> </div> )} </div> ); }
