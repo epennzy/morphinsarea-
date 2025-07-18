@@ -1,6 +1,7 @@
-export default function ProductCard({ name, price, details, onAddToCart }) {
+export default function ProductCard({ name, price, imageUrl, details, onAddToCart }) {
   return (
-    <div className="bg-[#2A2A2A] p-4 rounded-2xl">
+    <div className="bg-[#2A2A2A] p-4 rounded-2xl shadow text-white">
+      <img src={imageUrl} alt={name} className="w-full h-40 object-cover rounded mb-3" />
       <h2 className="text-lg font-semibold">{name}</h2>
       <p className="text-purple-400">{price}</p>
       <ul className="list-disc list-inside text-sm text-gray-300 mt-2">
